@@ -25,7 +25,7 @@ public class EventController {
     }
 
     @GetMapping("search")
-    public List<Event> search(
+    public List<Event> searchEvents(
             @RequestParam String q
     ) {
         throw new UnsupportedOperationException("Not implemented");

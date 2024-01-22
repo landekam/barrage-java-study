@@ -19,7 +19,7 @@ their performances, announce future events, and so on.
     * How to open access - https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository
 * Open it in Idea and run
     * `Ctrl-Shift-A` - `Execute Gradle Task` - `gradle bootRun`
-    * Check if you can open http://localhost:8080/e-catalog/api/v1/products
+    * Check if you can open http://localhost:8080/event/api/v1/events
 
     * Try `List All Events`
     * Try `Search All Events`, it should fail with 500
@@ -33,7 +33,7 @@ their performances, announce future events, and so on.
       }
       ```
     * Implement following search
-      API - [ProductController::searchProducts](src/main/java/net/barrage/school/java/ecatalog/web/ProductController.java)
+      API - [EventController::searchEvents](com/setronica/eventing/web/EventController.java)
       ```
       http://localhost:8080/event/api/v1/events/search?q=text
       ```
