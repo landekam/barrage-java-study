@@ -18,4 +18,20 @@ public class EventService {
     public List<Event> getAll() {
         return eventRepository.findAll();
     }
+
+    public List<Event> search(String searchQuery) {
+        List<Event> eventList = eventRepository.findAll();
+
+        return filterEventsBySearchQuery(eventList, searchQuery);
+    }
+
+    private List<Event> filterEventsBySearchQuery(List<Event> events, String searchQuery) {
+        return events.stream()
+                // search both title and description, make the search case insensitive
+                .filter(event -> event.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                        event.getDescription().toLowerCase().contains(searchQuery.toLowerCase())
+                )
+                .toList();
+    }
+
 }

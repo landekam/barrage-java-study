@@ -26,8 +26,8 @@ public class EventController {
 
     @GetMapping("search")
     public List<Event> searchEvents(
-            @RequestParam String q
+            @RequestParam String searchQuery
     ) {
-        throw new UnsupportedOperationException("Not implemented");
+        return eventService.search(searchQuery);
     }
 }
