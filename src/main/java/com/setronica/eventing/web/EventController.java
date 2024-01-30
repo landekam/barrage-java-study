@@ -2,10 +2,8 @@ package com.setronica.eventing.web;
 
 import com.setronica.eventing.app.EventService;
 import com.setronica.eventing.persistence.Event;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,8 +17,18 @@ public class EventController {
         this.eventService = eventService;
     }
 
+    @GetMapping("{id}")
+    public Event get(@PathVariable("id") int id) {
+        try {
+            return eventService.get(id);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @GetMapping
     public List<Event> findAll() {
+
         return eventService.getAll();
     }
 
@@ -28,6 +36,34 @@ public class EventController {
     public List<Event> searchEvents(
             @RequestParam String searchQuery
     ) {
-        return eventService.search(searchQuery);
+        return  eventService.search(searchQuery);
+    }
+
+    @PostMapping
+    public Event create(
+            @RequestBody Event newEvent
+    ) {
+        return eventService.create(newEvent);
+    }
+
+    @PutMapping("{id}")
+    public Event update(@PathVariable("id") int id, @RequestBody Event updateEvent) {
+        try  {
+            return eventService.update(id, updateEvent);
+        }
+        catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable("id") int id) {
+        try  {
+            eventService.delete(id);
+        }
+        catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

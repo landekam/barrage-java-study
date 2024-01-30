@@ -1,10 +1,17 @@
 package com.setronica.eventing.persistence;
 
 
+import jakarta.persistence.*;
+import org.springframework.data.repository.Repository;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+@Entity
+@Table(name = "events")
 public class Event {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String description;

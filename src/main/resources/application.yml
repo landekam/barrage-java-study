@@ -1,2 +1,9 @@
 server:
   port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:54326/event
+    username: postgres
+    password: postgres
