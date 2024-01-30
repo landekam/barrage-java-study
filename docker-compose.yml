@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:16.1-alpine
     ports:
-      - "5432:5432"
+      - "54326:5432"
     networks:
       - dockernet
     environment:
@@ -119,8 +119,8 @@ services:
     volumes:
       - ./docker/config/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5673:5672"
+      - "15673:15672"
 
 volumes:
   node-red-data:

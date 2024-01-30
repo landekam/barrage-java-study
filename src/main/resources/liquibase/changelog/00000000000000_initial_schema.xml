@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="1" author="matej.landeka">
+                <createTable tableName="events">
+                    <column name="id" type="int" autoIncrement="true">
+                        <constraints primaryKey="true" nullable="false" />
+                    </column>
+                    <column name="title" type="varchar">
+                        <constraints nullable="false"/>
+                    </column>
+                    <column name="description" type="varchar">
+                        <constraints nullable="false"/>
+                    </column>
+                    <column name="date" type="timestamp">
+                        <constraints nullable="false"/>
+                    </column>
+                    <column name="images" type="varchar[]">
+                        <constraints nullable="false"/>
+                    </column>
+                </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -2,9 +2,14 @@ package com.setronica.eventing.app;
 
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class EventService {
@@ -13,6 +18,14 @@ public class EventService {
 
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
+    }
+
+    public Event get(int id) throws ChangeSetPersister.NotFoundException {
+        Optional<Event> result = eventRepository.findById(id);
+        if (result.isEmpty()) {
+            throw new ResponseStatusException(NOT_FOUND, "event_not_found");
+        }
+        return result.get();
     }
 
     public List<Event> getAll() {
@@ -29,9 +42,26 @@ public class EventService {
         return events.stream()
                 // search both title and description, make the search case insensitive
                 .filter(event -> event.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                        event.getDescription().toLowerCase().contains(searchQuery.toLowerCase())
-                )
+                        event.getDescription().toLowerCase().contains(searchQuery.toLowerCase()))
                 .toList();
+    }
+
+    public Event create(Event newEvent) {
+        return eventRepository.save(newEvent);
+    }
+
+    public Event update(Integer id, Event newEvent) throws ChangeSetPersister.NotFoundException {
+        get(id);
+
+        newEvent.setId(id);
+
+        return eventRepository.save(newEvent);
+    }
+
+    public void delete(Integer id) throws ChangeSetPersister.NotFoundException {
+        get(id);
+
+        eventRepository.deleteById(id);
     }
 
 }
