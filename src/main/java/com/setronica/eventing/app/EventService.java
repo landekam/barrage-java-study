@@ -1,5 +1,6 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -20,10 +21,10 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event get(int id) throws ChangeSetPersister.NotFoundException {
+    public Event get(int id) {
         Optional<Event> result = eventRepository.findById(id);
         if (result.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "event_not_found");
+            throw new NotFoundException("event_not_found");
         }
         return result.get();
     }
@@ -50,7 +51,7 @@ public class EventService {
         return eventRepository.save(newEvent);
     }
 
-    public Event update(Integer id, Event newEvent) throws ChangeSetPersister.NotFoundException {
+    public Event update(Integer id, Event newEvent) {
         get(id);
 
         newEvent.setId(id);
@@ -58,7 +59,7 @@ public class EventService {
         return eventRepository.save(newEvent);
     }
 
-    public void delete(Integer id) throws ChangeSetPersister.NotFoundException {
+    public void delete(Integer id) {
         get(id);
 
         eventRepository.deleteById(id);

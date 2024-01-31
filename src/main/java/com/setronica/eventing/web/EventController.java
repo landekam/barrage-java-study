@@ -19,11 +19,7 @@ public class EventController {
 
     @GetMapping("{id}")
     public Event get(@PathVariable("id") int id) {
-        try {
             return eventService.get(id);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @GetMapping
@@ -48,22 +44,11 @@ public class EventController {
 
     @PutMapping("{id}")
     public Event update(@PathVariable("id") int id, @RequestBody Event updateEvent) {
-        try  {
             return eventService.update(id, updateEvent);
-        }
-        catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") int id) {
-        try  {
             eventService.delete(id);
-        }
-        catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }

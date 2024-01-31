@@ -37,4 +37,6 @@ out/
 .vscode/
 
 ### Docker ###
-.docker/
+docker/config
+docker/data
+docker/postgres_data
