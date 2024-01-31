@@ -1,11 +1,11 @@
 package com.setronica.eventing.web;
 
 import com.setronica.eventing.app.EventService;
+import com.setronica.eventing.dto.EventDto;
+import com.setronica.eventing.mapper.EventMapper;
 import com.setronica.eventing.persistence.Event;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,9 +14,11 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final EventMapper eventMapper;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, EventMapper eventMapper) {
         this.eventService = eventService;
+        this.eventMapper = eventMapper;
     }
 
     @GetMapping
@@ -29,5 +31,31 @@ public class EventController {
             @RequestParam String q
     ) {
         throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @GetMapping("/{id}")
+    public EventDto getById(@PathVariable Integer id) {
+        Event entity = eventService.getById(id);
+        return eventMapper.mapToDto(entity);
+    }
+
+    @PostMapping("")
+    public EventDto createEvent(@RequestBody EventDto dto) {
+        Event event = eventMapper.mapToEvent(dto);
+        Event createdEvent = eventService.createEvent(event);
+        return eventMapper.mapToDto(createdEvent);
+    }
+
+    @PutMapping("/{id}")
+    public EventDto updateEvent(@RequestBody EventDto dto) {
+        Event event = eventMapper.mapToEvent(dto);
+        Event createdEvent = eventService.updateEvent(event);
+        return eventMapper.mapToDto(createdEvent);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable("id") int id) {
+        eventService.deleteEvent(id);
+        return ResponseEntity.ok().build();
     }
 }

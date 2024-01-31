@@ -1,5 +1,6 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,21 @@ public class EventService {
 
     public List<Event> getAll() {
         return eventRepository.findAll();
+    }
+
+    public Event getById(Integer id) {
+        return eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found with id=" + id));
+    }
+
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
+    public Event updateEvent(Event event) {
+        return eventRepository.save(event);
+    }
+
+    public void deleteEvent(int id) {
+        eventRepository.deleteById(id);
     }
 }
