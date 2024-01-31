@@ -1,8 +1,10 @@
 package com.setronica.eventing.web;
 
 import com.setronica.eventing.app.EventService;
+import com.setronica.eventing.dto.EventDto;
+import com.setronica.eventing.mapper.EventMapper;
 import com.setronica.eventing.persistence.Event;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,58 +14,48 @@ import java.util.List;
 public class EventController {
 
     private final EventService eventService;
+    private final EventMapper eventMapper;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, EventMapper eventMapper) {
         this.eventService = eventService;
-    }
-
-    @GetMapping("{id}")
-    public Event get(@PathVariable("id") int id) {
-        try {
-            return eventService.get(id);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        this.eventMapper = eventMapper;
     }
 
     @GetMapping
     public List<Event> findAll() {
-
         return eventService.getAll();
     }
 
     @GetMapping("search")
     public List<Event> searchEvents(
-            @RequestParam String searchQuery
+            @RequestParam String q
     ) {
-        return  eventService.search(searchQuery);
+        throw new UnsupportedOperationException("Not implemented");
     }
 
-    @PostMapping
-    public Event create(
-            @RequestBody Event newEvent
-    ) {
-        return eventService.create(newEvent);
+    @GetMapping("/{id}")
+    public EventDto getById(@PathVariable Integer id) {
+        Event entity = eventService.getById(id);
+        return eventMapper.mapToDto(entity);
     }
 
-    @PutMapping("{id}")
-    public Event update(@PathVariable("id") int id, @RequestBody Event updateEvent) {
-        try  {
-            return eventService.update(id, updateEvent);
-        }
-        catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    @PostMapping("")
+    public EventDto createEvent(@RequestBody EventDto dto) {
+        Event event = eventMapper.mapToEvent(dto);
+        Event createdEvent = eventService.createEvent(event);
+        return eventMapper.mapToDto(createdEvent);
     }
 
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable("id") int id) {
-        try  {
-            eventService.delete(id);
-        }
-        catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    @PutMapping("/{id}")
+    public EventDto updateEvent(@RequestBody EventDto dto) {
+        Event event = eventMapper.mapToEvent(dto);
+        Event createdEvent = eventService.updateEvent(event);
+        return eventMapper.mapToDto(createdEvent);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable("id") int id) {
+        eventService.deleteEvent(id);
+        return ResponseEntity.ok().build();
     }
 }

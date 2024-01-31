@@ -1,15 +1,11 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class EventService {
@@ -20,48 +16,23 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event get(int id) throws ChangeSetPersister.NotFoundException {
-        Optional<Event> result = eventRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new ResponseStatusException(NOT_FOUND, "event_not_found");
-        }
-        return result.get();
-    }
-
     public List<Event> getAll() {
         return eventRepository.findAll();
     }
 
-    public List<Event> search(String searchQuery) {
-        List<Event> eventList = eventRepository.findAll();
-
-        return filterEventsBySearchQuery(eventList, searchQuery);
+    public Event getById(Integer id) {
+        return eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found with id=" + id));
     }
 
-    private List<Event> filterEventsBySearchQuery(List<Event> events, String searchQuery) {
-        return events.stream()
-                // search both title and description, make the search case insensitive
-                .filter(event -> event.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                        event.getDescription().toLowerCase().contains(searchQuery.toLowerCase()))
-                .toList();
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
     }
 
-    public Event create(Event newEvent) {
-        return eventRepository.save(newEvent);
+    public Event updateEvent(Event event) {
+        return eventRepository.save(event);
     }
 
-    public Event update(Integer id, Event newEvent) throws ChangeSetPersister.NotFoundException {
-        get(id);
-
-        newEvent.setId(id);
-
-        return eventRepository.save(newEvent);
-    }
-
-    public void delete(Integer id) throws ChangeSetPersister.NotFoundException {
-        get(id);
-
+    public void deleteEvent(int id) {
         eventRepository.deleteById(id);
     }
-
 }

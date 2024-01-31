@@ -1,12 +1,8 @@
 package com.setronica.eventing.persistence;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface EventRepository extends CrudRepository<Event, Integer> {
-    Optional<Event> findById(int id);
-
-    List<Event> findAll();
+@Component
+public interface EventRepository extends JpaRepository<Event, Integer> {
 }
