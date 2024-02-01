@@ -1,8 +1,10 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.exceptions.ApplicationLogicException;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.EventSchedule;
 import com.setronica.eventing.persistence.EventScheduleRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +27,19 @@ public class EventScheduleService {
     }
 
     public EventSchedule createSchedule(EventSchedule eventSchedule) {
-        return eventScheduleRepository.save(eventSchedule);
+        try {
+            return eventScheduleRepository.save(eventSchedule);
+        } catch (DataAccessException e) {
+            throw new ApplicationLogicException("something_went_wrong", e);
+        }
     }
 
     public EventSchedule updateSchedule(EventSchedule eventSchedule) {
-        return eventScheduleRepository.save(eventSchedule);
+        try {
+            return eventScheduleRepository.save(eventSchedule);
+        } catch (DataAccessException e) {
+            throw new ApplicationLogicException("something_went_wrong", e);
+        }
     }
 
     public void deleteSchedule(int id) {

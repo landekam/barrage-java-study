@@ -1,8 +1,10 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.exceptions.ApplicationLogicException;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +27,20 @@ public class EventService {
     }
 
     public Event createEvent(Event event) {
-        return eventRepository.save(event);
+        try {
+            return eventRepository.save(event);
+        } catch (DataAccessException e) {
+            throw new ApplicationLogicException("something_went_wrong", e);
+        }
+
     }
 
     public Event updateEvent(Event event) {
-        return eventRepository.save(event);
+        try {
+            return eventRepository.save(event);
+        } catch (DataAccessException e) {
+            throw new ApplicationLogicException("something_went_wrong", e);
+        }
     }
 
     public void deleteEvent(int id) {
