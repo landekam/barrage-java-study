@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.setronica.eventing.exceptions.BadRequestException;
 
 @ControllerAdvice
 public class MvcExceptionHandler {
@@ -21,5 +22,11 @@ public class MvcExceptionHandler {
     public ResponseEntity<ApplicationExceptionDto> handleNotFoundException(NotFoundException ex) {
         ApplicationExceptionDto exceptionDto = new ApplicationExceptionDto(ex.getMessage());
         return new ResponseEntity<>(exceptionDto, HttpStatusCode.valueOf(404));
+    }
+
+    @ExceptionHandler({ BadRequestException.class})
+    public ResponseEntity<ApplicationExceptionDto> handleBadRequestException(BadRequestException ex) {
+        ApplicationExceptionDto exceptionDto = new ApplicationExceptionDto(ex.getMessage());
+        return new ResponseEntity<>(exceptionDto, HttpStatusCode.valueOf(400));
     }
 }
