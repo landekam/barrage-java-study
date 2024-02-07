@@ -1,10 +1,8 @@
 package com.setronica.eventing.app;
 
-import com.setronica.eventing.exceptions.ApplicationLogicException;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.Event;
 import com.setronica.eventing.persistence.EventRepository;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,24 +24,21 @@ public class EventService {
         return eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found with id=" + id));
     }
 
-    public Event createEvent(Event event) {
-        try {
-            return eventRepository.save(event);
-        } catch (DataAccessException e) {
-            throw new ApplicationLogicException("something_went_wrong", e);
-        }
+    public List<Event> search(String searchQuery) {
+        return eventRepository.searchByTitle(searchQuery);
+    }
 
+    public Event createEvent(Event event) {
+        return eventRepository.save(event);
     }
 
     public Event updateEvent(Event event) {
-        try {
-            return eventRepository.save(event);
-        } catch (DataAccessException e) {
-            throw new ApplicationLogicException("something_went_wrong", e);
-        }
+        getById(event.getId());
+        return eventRepository.save(event);
     }
 
     public void deleteEvent(int id) {
+        getById(id);
         eventRepository.deleteById(id);
     }
 }

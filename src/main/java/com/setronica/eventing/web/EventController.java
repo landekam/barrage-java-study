@@ -28,9 +28,9 @@ public class EventController {
 
     @GetMapping("search")
     public List<Event> searchEvents(
-            @RequestParam String q
+            @RequestParam String searchQuery
     ) {
-        throw new UnsupportedOperationException("Not implemented");
+        return eventService.search(searchQuery);
     }
 
     @GetMapping("/{id}")
@@ -47,7 +47,8 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public EventDto updateEvent(@RequestBody EventDto dto) {
+    public EventDto updateEvent(@RequestBody EventDto dto, @PathVariable Integer id) {
+        dto.setId(id);
         Event event = eventMapper.mapToEvent(dto);
         Event createdEvent = eventService.updateEvent(event);
         return eventMapper.mapToDto(createdEvent);

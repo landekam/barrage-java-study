@@ -1,10 +1,8 @@
 package com.setronica.eventing.app;
 
-import com.setronica.eventing.exceptions.ApplicationLogicException;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.TicketOrder;
 import com.setronica.eventing.persistence.TicketRepository;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,22 +24,16 @@ public class TicketService {
     }
 
     public TicketOrder createTicket(TicketOrder ticket) {
-        try {
-            return ticketRepository.save(ticket);
-        } catch (DataAccessException e) {
-            throw new ApplicationLogicException("something_went_wrong", e);
-        }
+        return ticketRepository.save(ticket);
     }
 
     public TicketOrder updateTicket(TicketOrder ticket) {
-        try {
-            return ticketRepository.save(ticket);
-        } catch (DataAccessException e) {
-            throw new ApplicationLogicException("something_went_wrong", e);
-        }
+        getById(ticket.getId());
+        return ticketRepository.save(ticket);
     }
 
     public void deleteTicket(int id) {
+        getById(id);
         ticketRepository.deleteById(id);
     }
 }

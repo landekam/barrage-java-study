@@ -24,7 +24,7 @@ public class MvcExceptionHandler {
         return new ResponseEntity<>(exceptionDto, HttpStatusCode.valueOf(404));
     }
 
-    @ExceptionHandler({ BadRequestException.class})
+    @ExceptionHandler({ BadRequestException.class })
     public ResponseEntity<ApplicationExceptionDto> handleBadRequestException(BadRequestException ex) {
         ApplicationExceptionDto exceptionDto = new ApplicationExceptionDto(ex.getMessage());
         return new ResponseEntity<>(exceptionDto, HttpStatusCode.valueOf(400));
