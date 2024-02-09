@@ -3,10 +3,12 @@ package com.setronica.eventing.app;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.TicketOrder;
 import com.setronica.eventing.persistence.TicketRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
@@ -24,16 +26,21 @@ public class TicketService {
     }
 
     public TicketOrder createTicket(TicketOrder ticket) {
-        return ticketRepository.save(ticket);
+        TicketOrder newTicketOrder = ticketRepository.save(ticket);
+        log.info("Created ticket order with id: " + newTicketOrder.getId());
+        return newTicketOrder;
     }
 
     public TicketOrder updateTicket(TicketOrder ticket) {
         getById(ticket.getId());
-        return ticketRepository.save(ticket);
+        TicketOrder updatedTicketOrder =  ticketRepository.save(ticket);
+        log.info("Updated ticket order with id: " + updatedTicketOrder.getId());
+        return updatedTicketOrder;
     }
 
     public void deleteTicket(int id) {
         getById(id);
         ticketRepository.deleteById(id);
+        log.info("Deleted ticket order with id: " + id);
     }
 }
