@@ -3,10 +3,12 @@ package com.setronica.eventing.app;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.EventSchedule;
 import com.setronica.eventing.persistence.EventScheduleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class EventScheduleService {
     private final EventScheduleRepository eventScheduleRepository;
@@ -25,17 +27,21 @@ public class EventScheduleService {
     }
 
     public EventSchedule createSchedule(EventSchedule eventSchedule) {
-        return eventScheduleRepository.save(eventSchedule);
-
+        EventSchedule newEventSchedule = eventScheduleRepository.save(eventSchedule);
+        log.info("Created event schedule with id: " + newEventSchedule.getId());
+        return newEventSchedule;
     }
 
     public EventSchedule updateSchedule(EventSchedule eventSchedule) {
         getById(eventSchedule.getId());
-        return eventScheduleRepository.save(eventSchedule);
+        EventSchedule updatedEventSchedule = eventScheduleRepository.save(eventSchedule);
+        log.info("Updated event schedule with id: " + updatedEventSchedule.getId());
+        return updatedEventSchedule;
     }
 
     public void deleteSchedule(int id) {
         getById(id);
         eventScheduleRepository.deleteById(id);
+        log.info("Deleted event schedule with id: " + id);
     }
 }

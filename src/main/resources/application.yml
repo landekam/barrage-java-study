@@ -7,3 +7,11 @@ spring:
     url: jdbc:postgresql://localhost:54326/event
     username: postgres
     password: postgres
+
+logging:
+  level:
+    root: info
+  config: classpath:logback-dev.xml
+
+log:
+  destination: 127.0.0.1
