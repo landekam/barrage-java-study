@@ -37,6 +37,7 @@ public class PaymentService {
   public Payment createPayment(Payment payment) {
     TicketOrder ticketOrder = ticketRepository.findById(payment.getTicketOrderId()).orElseThrow(() -> new NotFoundException("Ticket order not found with id=" + payment.getTicketOrderId()));
     EventSchedule eventSchedule = eventScheduleRepository.findById(ticketOrder.getEventScheduleId()).orElseThrow(() -> new NotFoundException("Event schedule not found with id=" + ticketOrder.getEventScheduleId()));
+
     if (ticketOrder.getStatus().equals("SALE") || ticketOrder.getStatus().equals("REFUNDED")) {
       throw new BadRequestException("Payment for ticket order with id " + ticketOrder.getId() + " already exists");
     }
