@@ -11,4 +11,6 @@ public class TicketDto {
     private String lastname;
     private String email;
     private Integer amount;
+    private Integer eventScheduleId;
+    private String status;
 }
