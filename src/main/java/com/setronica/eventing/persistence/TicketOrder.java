@@ -23,5 +23,6 @@ public class TicketOrder {
     @Column(nullable = false)
     private Integer eventScheduleId;
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;
 }

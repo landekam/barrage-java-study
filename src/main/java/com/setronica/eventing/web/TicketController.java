@@ -33,7 +33,6 @@ public class TicketController {
 
     @PostMapping
     public TicketDto createTicket(@RequestBody TicketDto dto) {
-        dto.setStatus("BOOKED");
         TicketOrder ticket = ticketMapper.mapToTicket(dto);
         TicketOrder createdTicket = ticketService.createTicket(ticket);
         return ticketMapper.mapToDto(createdTicket);
@@ -41,10 +40,8 @@ public class TicketController {
 
     @PutMapping("/{id}")
     public TicketDto updateTicket(@RequestBody TicketDto dto, @PathVariable Integer id) {
-        dto.setStatus("BOOKED");
-        dto.setId(id);
         TicketOrder ticket = ticketMapper.mapToTicket(dto);
-        TicketOrder createdTicket = ticketService.updateTicket(ticket);
+        TicketOrder createdTicket = ticketService.updateTicket(ticket, id);
         return ticketMapper.mapToDto(createdTicket);
     }
 

@@ -8,6 +8,7 @@ import com.setronica.eventing.persistence.Payment;
 import com.setronica.eventing.persistence.PaymentRepository;
 import com.setronica.eventing.persistence.TicketOrder;
 import com.setronica.eventing.persistence.TicketRepository;
+import com.setronica.eventing.persistence.TicketStatus;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class PaymentService {
     TicketOrder ticketOrder = ticketRepository.findById(payment.getTicketOrderId()).orElseThrow(() -> new NotFoundException("Ticket order not found with id=" + payment.getTicketOrderId()));
     EventSchedule eventSchedule = eventScheduleRepository.findById(ticketOrder.getEventScheduleId()).orElseThrow(() -> new NotFoundException("Event schedule not found with id=" + ticketOrder.getEventScheduleId()));
 
-    if (ticketOrder.getStatus().equals("SALE") || ticketOrder.getStatus().equals("REFUNDED")) {
+    if (ticketOrder.getStatus().equals(TicketStatus.SALE) || ticketOrder.getStatus().equals(TicketStatus.REFUNDED)) {
       throw new BadRequestException("Payment for ticket order with id " + ticketOrder.getId() + " already exists");
     }
 
@@ -53,7 +54,7 @@ public class PaymentService {
     log.info("Created payment with id: " + newPayment.getId());
 
     if (payment.getSuccessful()) {
-      ticketOrder.setStatus("SALE");
+      ticketOrder.setStatus(TicketStatus.SALE);
       ticketRepository.save(ticketOrder);
       log.info("Updated ticket order with id: " + ticketOrder.getId());
     }
@@ -64,7 +65,7 @@ public class PaymentService {
   public Payment refundPayment(Integer id) {
     Payment originalPayment = getById(id);
     TicketOrder ticketOrder = ticketRepository.findById(originalPayment.getTicketOrderId()).orElseThrow(() -> new NotFoundException("Ticket order not found with id=" + originalPayment.getTicketOrderId()));
-    if (ticketOrder.getStatus().equals("REFUNDED")) {
+    if (ticketOrder.getStatus().equals(TicketStatus.REFUNDED)) {
       throw new BadRequestException("Ticket order with id " + ticketOrder.getId() + " already refunded");
     }
 
@@ -77,7 +78,7 @@ public class PaymentService {
     log.info("Successfully refunded payment with id: " + originalPayment.getId() + " and created payment with id: " + newPayment.getId());
 
     if (newPayment.getSuccessful()) {
-      ticketOrder.setStatus("REFUNDED");
+      ticketOrder.setStatus(TicketStatus.REFUNDED);
       ticketRepository.save(ticketOrder);
       log.info("Updated ticket order with id: " + ticketOrder.getId());
     }

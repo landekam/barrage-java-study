@@ -24,7 +24,6 @@ public abstract class PaymentMapper {
   }
 
   protected Boolean map(Boolean value) {
-    validateNotNull(value);
     return value;
   }
 
