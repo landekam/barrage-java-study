@@ -28,8 +28,7 @@ public class EventController {
 
     @GetMapping("search")
     public List<Event> searchEvents(
-            @RequestParam String searchQuery
-    ) {
+            @RequestParam String searchQuery) {
         return eventService.search(searchQuery);
     }
 
