@@ -36,7 +36,6 @@ public class PaymentController {
 
   @PostMapping
   public PaymentDto createPayment(@RequestBody PaymentDto dto) {
-    dto.setSuccessful(false);
     Payment payment = paymentMapper.mapToPayment(dto);
     Payment createdPayment = paymentService.createPayment(payment);
     return paymentMapper.mapToDto(createdPayment);

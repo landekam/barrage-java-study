@@ -3,6 +3,7 @@ package com.setronica.eventing.mapper;
 import com.setronica.eventing.dto.TicketDto;
 import com.setronica.eventing.exceptions.BadRequestException;
 import com.setronica.eventing.persistence.TicketOrder;
+import com.setronica.eventing.persistence.TicketStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
@@ -20,6 +21,10 @@ public abstract class TicketMapper {
 
     protected Integer map(Integer value) {
         validateNotNull(value);
+        return value;
+    }
+
+    protected TicketStatus map(TicketStatus value) {
         return value;
     }
 
