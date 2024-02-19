@@ -3,4 +3,5 @@
     <include file="classpath:liquibase/changelog/00000000000001_event_schedule_table.xml" />
     <include file="classpath:liquibase/changelog/00000000000002_alter_ticket_order_table.xml" />
     <include file="classpath:liquibase/changelog/00000000000003_payments_table.xml" />
+    <include file="classpath:liquibase/changelog/00000000000004_available_tickets_trigger.xml" />
 </databaseChangeLog>
