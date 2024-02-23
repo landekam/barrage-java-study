@@ -4,6 +4,7 @@ import com.setronica.eventing.app.TicketService;
 import com.setronica.eventing.dto.TicketDto;
 import com.setronica.eventing.mapper.TicketMapper;
 import com.setronica.eventing.persistence.TicketOrder;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,17 +22,20 @@ public class TicketController {
     }
 
     @GetMapping
+    @Operation(tags = {"Ticket order management"}, summary = "Returns a list of ticket orders")
     public List<TicketOrder> findAll() {
         return ticketService.getAll();
     }
 
     @GetMapping("/{id}")
+    @Operation(tags = {"Ticket order management"}, summary = "Returns a ticket order by id")
     public TicketDto getById(@PathVariable Integer id) {
         TicketOrder entity = ticketService.getById(id);
         return ticketMapper.mapToDto(entity);
     }
 
     @PostMapping
+    @Operation(tags = {"Ticket order management"}, summary = "Creates a ticket order")
     public TicketDto createTicket(@RequestBody TicketDto dto) {
         TicketOrder ticket = ticketMapper.mapToTicket(dto);
         TicketOrder createdTicket = ticketService.createTicket(ticket);
@@ -39,6 +43,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}")
+    @Operation(tags = {"Ticket order management"}, summary = "Updates a ticket order")
     public TicketDto updateTicket(@RequestBody TicketDto dto, @PathVariable Integer id) {
         TicketOrder ticket = ticketMapper.mapToTicket(dto);
         TicketOrder createdTicket = ticketService.updateTicket(ticket, id);
@@ -46,6 +51,7 @@ public class TicketController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(tags = {"Ticket order management"}, summary = "Deletes a ticket order")
     public ResponseEntity<Void> deleteTicket(@PathVariable int id) {
         ticketService.deleteTicket(id);
         return ResponseEntity.ok().build();

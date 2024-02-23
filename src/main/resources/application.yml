@@ -7,6 +7,17 @@ spring:
     url: jdbc:postgresql://localhost:54326/event
     username: postgres
     password: postgres
+  rabbitmq:
+    host: 127.0.0.1
+    port: 15673
+    username: rabbit
+    password: qwesda
+
+springdoc:
+  api-docs:
+    path: /service/api-docs
+  swagger-ui:
+    path: /service/swagger-ui.html
 
 logging:
   level:
