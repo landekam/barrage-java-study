@@ -9,7 +9,7 @@ spring:
     password: postgres
   rabbitmq:
     host: 127.0.0.1
-    port: 15673
+    port: 5673
     username: rabbit
     password: qwesda
 
