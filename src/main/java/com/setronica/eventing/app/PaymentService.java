@@ -1,5 +1,6 @@
 package com.setronica.eventing.app;
 
+import com.setronica.eventing.dto.PaymentResultDto;
 import com.setronica.eventing.exceptions.BadRequestException;
 import com.setronica.eventing.exceptions.NotFoundException;
 import com.setronica.eventing.persistence.EventSchedule;
@@ -12,6 +13,7 @@ import com.setronica.eventing.persistence.TicketStatus;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,10 +23,13 @@ public class PaymentService {
   private final TicketRepository ticketRepository;
   private final EventScheduleRepository eventScheduleRepository;
 
-  public PaymentService(PaymentRepository paymentRepository, TicketRepository ticketRepository, EventScheduleRepository eventScheduleRepository){
+  private final RabbitTemplate rabbitTemplate;
+
+  public PaymentService(PaymentRepository paymentRepository, TicketRepository ticketRepository, EventScheduleRepository eventScheduleRepository, RabbitTemplate rabbitTemplate){
     this.paymentRepository = paymentRepository;
     this.ticketRepository = ticketRepository;
     this.eventScheduleRepository = eventScheduleRepository;
+    this.rabbitTemplate = rabbitTemplate;
   }
 
   public List<Payment> getAll() {
@@ -43,11 +48,18 @@ public class PaymentService {
       throw new BadRequestException("Payment for ticket order with id " + ticketOrder.getId() + " already exists");
     }
 
+    PaymentResultDto paymentResult = new PaymentResultDto();
+    paymentResult.setPayment(payment.getId());
+    paymentResult.setAmount(payment.getAmount());
+
     if (payment.getAmount().compareTo(eventSchedule.getPrice().multiply(BigDecimal.valueOf(ticketOrder.getAmount()))) == 0) {
       payment.setSuccessful(true);
+      paymentResult.setState("AUTHORIZED");
     }
     else {
       payment.setSuccessful(false);
+      paymentResult.setState("FAILED");
+      ticketRepository.deleteById(payment.getTicketOrderId());
     }
 
     Payment newPayment = paymentRepository.save(payment);
@@ -58,6 +70,8 @@ public class PaymentService {
       ticketRepository.save(ticketOrder);
       log.info("Updated ticket order with id: " + ticketOrder.getId());
     }
+
+    rabbitTemplate.convertAndSend("payment-notifications", paymentResult);
 
     return newPayment;
   }
