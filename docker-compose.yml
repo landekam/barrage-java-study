@@ -122,8 +122,28 @@ services:
       - "5673:5672"
       - "15673:15672"
 
+  grafana:
+    container_name: grafana.dockernet
+    image: grafana/grafana
+    networks:
+      - dockernet
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+  prometheus:
+    container_name: prometheus.dockernet
+    image: prom/prometheus
+    networks:
+      - dockernet
+    volumes:
+      - ./docker/config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
 volumes:
-  node-red-data:
+  grafana_data:
 
 networks:
   dockernet:
